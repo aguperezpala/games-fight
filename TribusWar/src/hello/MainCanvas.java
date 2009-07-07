@@ -40,11 +40,15 @@ class MainCanvas extends GameCanvas implements Runnable {
             this.menu.strOp = menuOps;
             menu.showNormalMenu("backImg.png");
             this.threadMenu = new Thread(menu);
+            this.threadMenu.start();
             /* ahora esperamos que termine el menu y vemos que opcion nos devolvio */
             try {
                 threadMenu.join();
             } catch (Exception e) {}
             System.out.print("Se selecciono la opcion: " + this.menuResp[0] + "\n");
+            /* Manejamos primero que nos respondio el menu y despues lo liberamos */
+            this.menu = null;
+            System.gc();
         }
     }
 

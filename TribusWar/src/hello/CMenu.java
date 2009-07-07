@@ -60,6 +60,7 @@ public class CMenu implements Runnable {
         this.g = g;
         this.gc = gc;
         this.font = Font.getDefaultFont();
+        System.out.print("CREAMOS EL MENU\n");
     }
 
     /* Esta funcion es para cargar el menu de forma "normal", osea, tenemos opciones
@@ -94,20 +95,26 @@ public class CMenu implements Runnable {
             strLen = (gc.getWidth() - strLen) / 2;
             this.opCoords[i][0] = strLen;
             this.opCoords[i][1] = posY + i*(ySeparator + font.getBaselinePosition());
-        }        
+        }
+        /* seteamos la posicion del efecto */
+        this.actualizeEffect(0);
+       
     }
 
 
     private void manageKeys (int keyCode)
     {
-        if ((GameCanvas.DOWN & keyCode) != 0) {
+        if ((GameCanvas.DOWN_PRESSED & keyCode) != 0) {
             if (this.actualOp == 0)
                 this.actualOp = this.strOp.length - 1;
             else
-                this.actualOp--;            
-        } else if ((GameCanvas.UP & keyCode) != 0) {
+                this.actualOp--;
+            /* actualizamos el efecto */
+            this.actualizeEffect(this.actualOp);
+        } else if ((GameCanvas.UP_PRESSED & keyCode) != 0) {
             this.actualOp = (actualOp + 1) % this.strOp.length;
-        } else if ((GameCanvas.FIRE & keyCode) != 0) {
+            this.actualizeEffect(this.actualOp);
+        } else if ((GameCanvas.FIRE_PRESSED & keyCode) != 0) {
             this.op[0] = this.actualOp;
             /* terminamos el menu ademas */
             this.cleanMenu();
@@ -153,8 +160,8 @@ public class CMenu implements Runnable {
         /* dibujamos la imagen QUE SIEMPRE existe */
         g.drawImage(backImg, 0, 0, Graphics.LEFT|Graphics.TOP);
 
-        /* Seteamos el color de las letras en blanco por el momento */
-        g.setColor(0x00FFFFFF);
+        /* Seteamos el color de las letras */
+        g.setColor(0x00FF00FF);
 
         /* verificamos si tenemos que dibujar de forma "normal" */
         if (normalMenu) {
@@ -168,7 +175,8 @@ public class CMenu implements Runnable {
              * vamos a ir dibujando de a poco el tamaño de las lineas que van a
              * ir encerrando la opcion.
              */
-            g.setColor(color);
+            //g.setColor(color);
+            g.setColor(0x000000FF);
 
             /* dibujamos primero los circulos */
             g.fillArc(effectCoords[0][0], effectCoords[0][1], CMenu.CIRCLE_SIZE,
@@ -198,6 +206,20 @@ public class CMenu implements Runnable {
 
     }
 
+
+    private void actualizeEffect (int p)
+    {
+        int strLen = 0;
+
+        this.effectCoords[0][0] = this.opCoords[p][0] - 4*CMenu.CIRCLE_SIZE;
+        this.effectCoords[0][1] = this.opCoords[p][1] - CMenu.CIRCLE_SIZE/2;
+        strLen = font.stringWidth(strOp[p]);
+        this.effectCoords[1][0] = this.opCoords[p][0] + strLen + 4*CMenu.CIRCLE_SIZE;
+        this.effectCoords[1][1] = this.opCoords[p][1] + CMenu.CIRCLE_SIZE/2 +
+                this.font.getBaselinePosition();
+        this.effectPorc = 0;
+
+    }
 
     private void cleanMenu ()
     {
