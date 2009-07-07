@@ -16,6 +16,11 @@ class MainCanvas extends GameCanvas implements Runnable {
 
 
     private Graphics g;
+    private boolean paused = false;
+    private boolean alive = true;
+    private Thread threadMenu = null;
+    private Thread threadGame = null;
+    
 
     public MainCanvas ()
     {
@@ -23,9 +28,14 @@ class MainCanvas extends GameCanvas implements Runnable {
         this.g = this.getGraphics();
     }
 
+    
+    public void run() 
+    {
+        while (this.alive) {
+            this.threadMenu = new Thread()
+            
 
-    public void run() {
-
+        }
     }
 
 }
