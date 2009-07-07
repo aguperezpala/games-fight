@@ -14,6 +14,8 @@ import javax.microedition.lcdui.*;
 public class TribusMIDlet extends MIDlet {
 
     private boolean midletPaused = false;
+    private MainCanvas mainCanvas = new MainCanvas();
+    private Thread threadCanvas = null;
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
     private Command exitCommand;
@@ -46,6 +48,12 @@ public class TribusMIDlet extends MIDlet {
      */
     public void startMIDlet() {//GEN-END:|3-startMIDlet|0|3-preAction
         // write pre-action user code here
+        /* aca iria la presentacion de Cer-INK */
+        this.threadCanvas = new Thread (this.mainCanvas);
+        /* seteamos el MainCanvas para visualizarlo */
+        this.getDisplay().setCurrent(mainCanvas);
+        this.threadCanvas.start();
+
 //GEN-LINE:|3-startMIDlet|1|3-postAction
         // write post-action user code here
     }//GEN-BEGIN:|3-startMIDlet|2|
