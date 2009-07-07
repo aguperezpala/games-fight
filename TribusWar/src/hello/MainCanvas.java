@@ -13,6 +13,7 @@ import javax.microedition.lcdui.game.GameCanvas;
  * @author agustin
  */
 class MainCanvas extends GameCanvas implements Runnable {
+    private static final String menuOps[] = {"Iniciar","Ayuda","Salir"};
 
 
     private Graphics g;
@@ -20,7 +21,8 @@ class MainCanvas extends GameCanvas implements Runnable {
     private boolean alive = true;
     private Thread threadMenu = null;
     private Thread threadGame = null;
-    
+    private CMenu menu = null;
+    private int menuResp[] = {0};
 
     public MainCanvas ()
     {
@@ -32,9 +34,17 @@ class MainCanvas extends GameCanvas implements Runnable {
     public void run() 
     {
         while (this.alive) {
-            this.threadMenu = new Thread()
-            
-
+            /* creamos el menu */
+            this.menu = new CMenu (g, this);
+            this.menu.op = menuResp;
+            this.menu.strOp = menuOps;
+            menu.showNormalMenu("backImg.png");
+            this.threadMenu = new Thread(menu);
+            /* ahora esperamos que termine el menu y vemos que opcion nos devolvio */
+            try {
+                threadMenu.join();
+            } catch (Exception e) {}
+            System.out.print("Se selecciono la opcion: " + this.menuResp[0] + "\n");
         }
     }
 
